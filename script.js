@@ -1,5 +1,18 @@
 const container = document.querySelector(".container");
 
+const grayscaleGradient = [
+    "#eeeeee", "#dddddd", "#cccccc", "#bbbbbb", "#aaaaaa",
+    "#999999", "#888888", "#777777", "#666666", "#555555",
+    "#4c4c4c", "#444444", "#3c3c3c", "#343434", "#2c2c2c",
+    "#242424", "#1c1c1c", "#181818", "#141414", "#101010",
+    "#0c0c0c", "#080808", "#040404", "#020202", "#000000"
+  ];  
+
+function randomColorPicker(){
+    const id = Math.floor(Math.random()*grayscaleGradient.length);
+    return grayscaleGradient[id];
+}
+
 const row_len = 16;
 const column_len = 16;
 
@@ -17,11 +30,14 @@ function rowCreate(container, rowId){
     return row;
 }
 
-function boxCreate(contianer, boxId){
+function boxCreate(container, boxId){
     const box = document.createElement("div");
     box.classList.toggle("box");
     box.id = boxId;
-    contianer.appendChild(box);
+    box.addEventListener("mouseover", (e)=>{
+        e.target.style.backgroundColor = randomColorPicker();
+    });
+    container.appendChild(box);
     return box;
 }
 
