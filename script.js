@@ -13,13 +13,20 @@ function randomColorPicker(){
     return grayscaleGradient[id];
 }
 
-const row_len = 16;
-const column_len = 16;
+function twoDimArrayCreate(row_len, column_len, fillElement){
+    const arr = new Array(column_len);
+    for(let i=0; i<column_len; i++){
+        arr[i] = new Array(row_len).fill(fillElement);
+    }
+    return arr;
+}
 
-const rows = new Array(column_len).fill(null);
-const boxes = new Array(column_len);
-for(let i=0; i<column_len; i++){
-    boxes[i] = new Array(row_len).fill(null);
+let row_len = Math.floor(window.innerWidth/40);
+let column_len = Math.floor(window.innerHeight/40);
+
+function lengthUpdate(){
+    row_len = Math.floor(window.innerWidth/40);
+    column_len = Math.floor(window.innerHeight/40);
 }
 
 function rowCreate(container, rowId){
@@ -42,12 +49,42 @@ function boxCreate(container, boxId){
 }
 
 function gridCreate(container){
-    for(let i=0; i<row_len; i++){
+    const rows = new Array(column_len).fill(null);
+    const boxes = twoDimArrayCreate(row_len, column_len, null);
+    for(let i=0; i<column_len; i++){
         rows[i] = rowCreate(container, i);
-        for(let j=0; j<column_len; j++){
+        for(let j=0; j<row_len; j++){
             boxes[i][j] = boxCreate(rows[i], (i.toString()+","+j.toString()));
         }
     }
+    return [rows, boxes];
 }
 
-gridCreate(container);
+let [oldRows, oldBoxes] = gridCreate(container);
+
+function gridDelete(){
+    const boxColors = twoDimArrayCreate(row_len, column_len, null);
+    for(let i=0; i<column_len; i++){
+        for(let j=0; j<row_len; j++){
+            boxColors[i][j] = oldBoxes[i][j].style.backgroundColor;
+        }
+        oldRows[i].remove();
+    }
+    return boxColors;
+}
+
+function gridUpdate(container){
+    const boxColors = gridDelete();
+    lengthUpdate();
+    [oldRows, oldBoxes] = gridCreate(container);
+    for(let i=0; (i<oldBoxes.length && i<boxColors.length); i++){
+        for(let j=0; (j<oldBoxes[i].length && j<boxColors[i].length); j++){
+            oldBoxes[i][j].style.backgroundColor = boxColors[i][j];
+        }
+    }
+    return [oldRows, oldBoxes];
+}
+
+window.addEventListener("resize", ()=>{
+    [oldRows, oldBoxes] = gridUpdate(container);
+})
