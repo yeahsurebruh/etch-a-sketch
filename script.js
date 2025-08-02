@@ -118,6 +118,7 @@ const editBtn = document.querySelector(".edit-btn");
 
 editBtn.addEventListener("click", (e)=>{
     gridDelete(oldRows);
+    boxLengthUpdate();
     getUserRowColumn();
     [oldRows, oldBoxes] = gridCreate(container);
 });
