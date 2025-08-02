@@ -1,5 +1,24 @@
 const container = document.querySelector(".container");
 
+let boxSideLength = 40;
+boxSideLength = prompt("Enter desired length for side of the squares (default is 40)");
+
+const boxStyle = document.createElement("style");
+
+function boxLengthUpdate(boxSideLength){
+    boxStyle.textContent = `
+        .box {
+            margin: 1px 1px;
+            border: 1px solid black;
+            height: ${boxSideLength}px;
+            width: ${boxSideLength}px;
+        }
+    `;
+}
+
+boxLengthUpdate(boxSideLength);
+document.head.appendChild(boxStyle);
+
 const grayscaleGradient = [
     "#eeeeee", "#dddddd", "#cccccc", "#bbbbbb", "#aaaaaa",
     "#999999", "#888888", "#777777", "#666666", "#555555",
@@ -13,8 +32,8 @@ function randomColorPicker(){
     return grayscaleGradient[id];
 }
 
-const row_len = 16;
-const column_len = 16;
+let row_len = 16;
+let column_len = 16;
 
 const rows = new Array(column_len).fill(null);
 const boxes = new Array(column_len);
@@ -41,13 +60,13 @@ function boxCreate(container, boxId){
     return box;
 }
 
-function gridCreate(container){
-    for(let i=0; i<row_len; i++){
+function gridCreate(container, row_len, column_len){
+    for(let i=0; i<column_len; i++){
         rows[i] = rowCreate(container, i);
-        for(let j=0; j<column_len; j++){
+        for(let j=0; j<row_len; j++){
             boxes[i][j] = boxCreate(rows[i], (i.toString()+","+j.toString()));
         }
     }
 }
 
-gridCreate(container);
+gridCreate(container, row_len, column_len);

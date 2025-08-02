@@ -6,12 +6,5 @@
 
 .row {
     display: flex;
-    justify-content: space-evenly;
-}
-
-.box {
-    margin: 1px 1px;
-    border: 1px solid black;
-    height: 6.25vh;
-    width: 6.25vw;
+    /* justify-content: space-evenly; */
 }
