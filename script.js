@@ -1,11 +1,20 @@
 const container = document.querySelector(".container");
 
 let boxSideLength = 40;
-boxSideLength = prompt("Enter desired length for side of the squares (default is 40)");
 
 const boxStyle = document.createElement("style");
 
-function boxLengthUpdate(boxSideLength){
+function boxLengthUpdate(){
+    boxSL = Number(prompt("Enter desired length for side of the squares (default is 40)"));
+    if(boxSL === 0){
+        boxSL = boxSideLength;
+    }
+    else if((!boxSL) || (boxSL < 0)){
+        alert("Enter valid positive value");
+        boxLengthUpdate();
+        return;
+    }
+    boxSideLength = boxSL;
     boxStyle.textContent = `
         .box {
             margin: 1px 1px;
@@ -16,7 +25,7 @@ function boxLengthUpdate(boxSideLength){
     `;
 }
 
-boxLengthUpdate(boxSideLength);
+boxLengthUpdate();
 document.head.appendChild(boxStyle);
 
 const grayscaleGradient = [
@@ -84,14 +93,26 @@ function gridDelete(oldRows){
     }
 }
 
-function getUserRowColumn(){
-    row_len = Number(prompt("Enter row size"));
-    column_len = Number(prompt("Enter column size"));
-    if(!(row_len && column_len)){
-        alert("Enter valid values.");
-        getUserRowColumn();
+function getUserRowColumn() {
+    let rows = Number(prompt("Enter row size (if 0 it will retain previous value)"));
+    let columns = Number(prompt("Enter column size (if 0 it will retain previous value)"));
+  
+    if (rows === 0) {
+      rows = row_len; 
     }
-}
+    if (columns === 0) {
+      columns = column_len;
+    }
+  
+    if (!rows || !columns || rows < 0 || columns < 0) {
+      alert("Enter valid positive values.");
+      getUserRowColumn();
+      return;
+    }
+  
+    row_len = rows;
+    column_len = columns;
+  }
 
 const editBtn = document.querySelector(".edit-btn");
 
