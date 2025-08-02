@@ -35,10 +35,12 @@ function randomColorPicker(){
 let row_len = 16;
 let column_len = 16;
 
-const rows = new Array(column_len).fill(null);
-const boxes = new Array(column_len);
-for(let i=0; i<column_len; i++){
-    boxes[i] = new Array(row_len).fill(null);
+function twoDimArrayCreate(row_len, column_len, fillElement){
+    const arr = new Array(column_len);
+    for(let i=0; i<column_len; i++){
+        arr[i] = new Array(row_len).fill(fillElement);
+    }
+    return arr;
 }
 
 function rowCreate(container, rowId){
@@ -54,19 +56,47 @@ function boxCreate(container, boxId){
     box.classList.toggle("box");
     box.id = boxId;
     box.addEventListener("mouseover", (e)=>{
-        e.target.style.backgroundColor = randomColorPicker();
+        const color = randomColorPicker();
+        e.target.style.backgroundColor = color;
+        e.target.style.borderColor = color;
     });
     container.appendChild(box);
     return box;
 }
 
-function gridCreate(container, row_len, column_len){
+function gridCreate(container){
+    const rows = new Array(column_len).fill(null);
+    const boxes = twoDimArrayCreate(row_len, column_len, null);
     for(let i=0; i<column_len; i++){
         rows[i] = rowCreate(container, i);
         for(let j=0; j<row_len; j++){
             boxes[i][j] = boxCreate(rows[i], (i.toString()+","+j.toString()));
         }
     }
+    return [rows, boxes];
 }
 
-gridCreate(container, row_len, column_len);
+let [oldRows, oldBoxes] = gridCreate(container);
+
+function gridDelete(oldRows){
+    for(let i=0; i<column_len; i++){
+        oldRows[i].remove();
+    }
+}
+
+function getUserRowColumn(){
+    row_len = Number(prompt("Enter row size"));
+    column_len = Number(prompt("Enter column size"));
+    if(!(row_len && column_len)){
+        alert("Enter valid values.");
+        getUserRowColumn();
+    }
+}
+
+const editBtn = document.querySelector(".edit-btn");
+
+editBtn.addEventListener("click", (e)=>{
+    gridDelete(oldRows);
+    getUserRowColumn();
+    [oldRows, oldBoxes] = gridCreate(container);
+});
